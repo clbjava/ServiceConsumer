@@ -32,7 +32,7 @@ public class BaseController {
 	public String query(HttpServletRequest request, HttpServletResponse response,
 			@RequestParam(value = "id", required = false) String id) {
 		LOGGER.info("BaseController.query:{}", id);
-		return this.restTemplate.getForObject("http://ServiceProvider/" + id, String.class);
+		return this.restTemplate.getForObject("http://service-provider/server/query/" + id, String.class);
 	}
 	
 	public void failHandle() {
