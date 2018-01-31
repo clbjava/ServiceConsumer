@@ -27,12 +27,14 @@ public class BaseController {
 	@Autowired
 	private LoadBalancerClient loadBalancerClient;
     
-	@HystrixCommand(fallbackMethod = "findByIdFallback")
+	//@HystrixCommand(fallbackMethod = "findByIdFallback")
 	@RequestMapping(value = "query", method = RequestMethod.GET)
 	public String query(HttpServletRequest request, HttpServletResponse response,
 			@RequestParam(value = "id", required = false) String id) {
 		LOGGER.info("BaseController.query:{}", id);
-		return this.restTemplate.getForObject("http://service-provider/server/query/" + id, String.class);
+		String url="http://service-provider/server/query?id="+String.valueOf(id);
+		
+		return this.restTemplate.getForObject(url, String.class);
 	}
 	
 	public void failHandle() {
@@ -43,7 +45,8 @@ public class BaseController {
 	public void logUserInstance() {
 		ServiceInstance serviceInstance = this.loadBalancerClient.choose("service-provider");
 		// 打印当前选择的是哪个节点
-		LOGGER.info("{}:{}:{}", serviceInstance.getServiceId(), serviceInstance.getHost(), serviceInstance.getPort());
+		LOGGER.info("{}:{}:{}", serviceInstance.getServiceId
+				(), serviceInstance.getHost(), serviceInstance.getPort());
 	}
 
 }
